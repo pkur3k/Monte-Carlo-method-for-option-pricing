@@ -4,30 +4,35 @@ Nt <- 252
 Np <- 1e4
 s0 <- 100
 K <- 100
-rf <- 0.1
+r <- 0.1
 T <- 1
 
-ps <- MCPrice(s0, K, rf, T, sigma, Nt, Np)
-
-matplot (ps[1:2], type="l", lty=1, col=c("green", "blue", "red"), 
-         main="Monte Carlo price paths", 
-         xlab="Time Step", ylab="Price") 
-
-MCPrice <- function(s0, K, rf, T, sigma, Nt, Np){
+MCPrice<-function(Np, T, r, sigma, s0, K) {
   
-  dt <- T/Nt
-  #r <- matrix(rnorm(Nt*Np, mean=mu*dt, sd=sigma*sqrt(dt)), nrow=Nt)
-  z <- matrix(rnorm(Nt*Np), nrow=Nt)
-  r <- (mu-0.5*sigma**2)*T + z*sigma*sqrt(dt)
-  s <- matrix(0, Nt+1, Np)
-
-  for(t in 1:Nt) {
-    s[t+1, ] <- s[t, ] + r[t, ]
-  }
+  z <- rnorm(Np, mean=0, sd=1)
+  S <- s0*exp((r - 0.5*sigma^2)*T + sigma*sqrt(T) * z)
   
+  # call option price 
+  call_payoffs <- exp(-r*T)*pmax(S-K,0)
+  print(call_payoffs)
+  call_price <- mean(call_payoffs)
   
-  P <- s0*exp(s)    
-  return(P)
+  # put option price and 
+  put_payoffs <- exp(-r*T)*pmax(K-S,0)
+  put_price <- mean(put_payoffs)
+  
+  # standard deviation 
+  err_call <- sd(call_payoffs)/sqrt(Np)
+  err_put <- sd(put_payoffs)/sqrt(Np)
+  
+  output<-list(call_price=call_price, err_call=err_call, 
+               put_price=put_price, err_call=err_call)
+  
+  return(output)
+  
 }
+
+results<-MCPrice(Np, T, r, sigma, s0, K)
+results
   
  

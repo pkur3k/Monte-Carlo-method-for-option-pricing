@@ -19,3 +19,6 @@ matplot (s[, 1:3], type="l", lty=1, col=c("green", "blue", "red"),
          xlab="Time Step", ylab="Price") 
 
 
+
+
+
