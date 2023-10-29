@@ -1,4 +1,4 @@
-MCPriceImportanceSampling<-function(Np, Nt, T, r, sigma, s0, K) {
+MC_Price_ImportanceSampling<-function(Np, Nt, T, r, sigma, s0, K) {
   
   dt = T/Nt
   Z <-  matrix(rnorm(Np * Nt, mean=0, sd=1),nrow = Nt, ncol = Np) 
